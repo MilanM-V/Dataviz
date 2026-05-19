@@ -76,7 +76,7 @@ if __name__ == "__main__":
     <!DOCTYPE html>
     <html><head>
     <meta charset="utf-8">
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-3.4.0.min.js"></script>
     <link rel="stylesheet" href="style.css">
     </head><body style="font-family:sans-serif; padding:2rem; background: var(--bg);">
     <h2>Test — partie_milan.py</h2>
