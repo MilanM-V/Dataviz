@@ -51,17 +51,20 @@ def generer_html(df):
     # include_plotlyjs=False → Plotly.js est déjà dans le template
     graph_html = fig.to_html(full_html=False, include_plotlyjs=False)
 
-    fig = px.scatter_mapbox(
+    fig = px.scatter_geo(
         df,
         lat="Latitude",
         lon="Longitude",
-        color="Catégorie",
-        size="Population",
+        color_discrete_sequence=["red"],
         hover_name="Nom de la ville",
-        zoom=4,
-        center={"lat": 46.2276, "lon": 2.2137}, # Centre sur la France
-        mapbox_style="carto-positron",
+        scope="europe",
         title="Carte des Villes"
+    )
+    # On zoome manuellement sur la France
+    fig.update_geos(
+        center=dict(lon=2.2137, lat=46.2276),
+        lataxis_range=[41, 52],
+        lonaxis_range=[-5, 10]
     )
     carte_html = fig.to_html(full_html=False, include_plotlyjs=False)
     # ──────────────────────────────────────
