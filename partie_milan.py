@@ -56,8 +56,8 @@ def generer_html(df):
     # ──────────────────────────────────────
     # Tu peux ajouter du HTML brut autour de ton graphique
     # Exemple :
-    # metric = f'<p style="font-size:0.9rem; color:#6b7280;">Moyenne : {df[col].mean():.1f}</p>'
-
+    metric = f'<p style="font-size:0.9rem; color:#6b7280;">Moyenne : {df[df.columns[1]].mean():.1f}</p>'
+    graph_html = metric + graph_html  # concatène métrique + graphique
     # ──────────────────────────────────────
     # 4. Retourner le HTML final
     # ──────────────────────────────────────
