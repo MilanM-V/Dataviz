@@ -56,13 +56,17 @@ def generer_html(df):
     # ──────────────────────────────────────
     # Tu peux ajouter du HTML brut autour de ton graphique
     # Exemple :
-    metric = f'<p style="font-size:0.9rem; color:#6b7280;">Moyenne : {df[df.columns[1]].mean():.1f}</p>'
-    graph_html = metric + graph_html  # concatène métrique + graphique
     # ──────────────────────────────────────
-    # 4. Retourner le HTML final
+    # 4. Retourner les éléments avec leurs destinations
     # ──────────────────────────────────────
-    return graph_html
-
+    # Au lieu de retourner une seule chaîne de texte, tu retournes
+    # un dictionnaire qui associe : "PLACEHOLDER" -> "HTML"
+    
+    return {
+        "<!-- INJECTER_GRAPH_1 -->": graph_html,
+        "<!-- INJECTER_STAT_1 -->": f"{df[df.columns[1]].mean():.1f}<span class='stat-highlight-suffix'>k</span>",
+        # "<!-- INJECTER_GRAPH_2 -->": mon_autre_graph_html,
+    }
 
 # ══════════════════════════════════════════
 # TEST LOCAL — lance : python partie_milan.py
@@ -74,17 +78,20 @@ if __name__ == "__main__":
         "Valeur": [23, 45, 12, 67, 34],
     })
 
-    html = generer_html(mock_data)
-    print(f"✅ HTML généré : {len(html)} caractères")
+    resultats = generer_html(mock_data)
+    html_complet = "<br>".join(resultats.values())
+    
+    print(f"✅ Généré {len(resultats)} éléments. Total : {len(html_complet)} caractères")
 
     # Sauvegarde un aperçu pour tester dans le navigateur
     with open("test_milan.html", "w", encoding="utf-8") as f:
         f.write(f"""<!DOCTYPE html>
 <html><head>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-</head><body style="font-family:sans-serif; padding:2rem;">
+<link rel="stylesheet" href="style.css">
+</head><body style="font-family:sans-serif; padding:2rem; background: var(--bg);">
 <h2>Test — partie_milan.py</h2>
-{html}
+{html_complet}
 </body></html>""")
 
     print("📄 Ouvre test_milan.html dans Chrome pour voir le résultat")
