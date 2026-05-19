@@ -87,16 +87,18 @@ Si vous avez une colonne avec des noms de pays, de régions ou des coordonnées 
 Si vous avez la longitude et latitude :
 
 ```python
-fig = px.scatter_geo(
+fig = px.scatter_mapbox(
     df,
     lat="Latitude",
     lon="Longitude",
     color="Taux de chômage", # La couleur du point dépend du taux
     size="Population", # La taille du point dépend de la population
     hover_name="Nom de la ville", # Ce qui s'affiche quand on passe la souris
+    zoom=4, # Niveau de zoom initial
+    center={"lat": 46.2276, "lon": 2.2137}, # Centre sur la France
+    mapbox_style="carto-positron", # Style de fond de carte très propre
     title="Carte des Villes"
 )
-fig.update_geos(fitbounds="locations") # Pour zoomer automatiquement sur la France !
 ```
 
 ### 🗺️ Carte coloriée par zone (Choropleth)

@@ -51,16 +51,18 @@ def generer_html(df):
     # include_plotlyjs=False → Plotly.js est déjà dans le template
     graph_html = fig.to_html(full_html=False, include_plotlyjs=False)
 
-    fig = px.scatter_geo(
-    df,
-    lat="Latitude",
-    lon="Longitude",
-    color="Catégorie", # Colonne pour la couleur
-    size="Population", # Colonne pour la taille des points
-    hover_name="Nom de la ville", # Ce qui s'affiche quand on passe la souris
-    title="Carte des Villes"
+    fig = px.scatter_mapbox(
+        df,
+        lat="Latitude",
+        lon="Longitude",
+        color="Catégorie",
+        size="Population",
+        hover_name="Nom de la ville",
+        zoom=4,
+        center={"lat": 46.2276, "lon": 2.2137}, # Centre sur la France
+        mapbox_style="carto-positron",
+        title="Carte des Villes"
     )
-    fig.update_geos(fitbounds="locations", scope="europe")
     carte_html = fig.to_html(full_html=False, include_plotlyjs=False)
     # ──────────────────────────────────────
     # 3. (Optionnel) Ajouter des métriques
@@ -92,7 +94,7 @@ if __name__ == "__main__":
         "Latitude": [48.8566, 45.7640, 43.7102, 50.6292, 47.2184],
         "Longitude": [2.3522, 4.8357, 7.2620, 3.0573, -1.5536],
         "Nom de la ville": ["Paris", "Lyon", "Nice", "Lille", "Nantes"],
-        "Population": [10, 20, 15, 25, 18],
+        "Population": [10, 20, 15, 25, 500000000],
     })
 
     resultats = generer_html(mock_data)
