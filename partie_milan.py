@@ -1,22 +1,22 @@
 import pandas as pd
 import plotly.express as px
 
-def generer_html_milan():
-    # 1. Charger les données propres
-    # df = pd.read_csv("data_propre.csv") # <-- Si tu utilises les vraies données
+def generer_html(df=None):
+    # 1. Charger les données (fallback sur data_propre.csv si non fourni)
+    if df is None:
+        try:
+            df = pd.read_csv("data_propre.csv")
+        except FileNotFoundError:
+            # Pour l'instant on utilise de fausses données pour tester si le fichier n'existe pas
+            df = pd.DataFrame({
+                "Catégorie": ["Type 1", "Type 2", "Type 1", "Type 2", "Type 1"],
+                "Valeur": [23, 45, 12, 67, 34],
+                "Latitude": [48.8566, 45.7640, 43.7102, 50.6292, 47.2184],
+                "Longitude": [2.3522, 4.8357, 7.2620, 3.0573, -1.5536],
+                "Nom de la ville": ["Paris", "Lyon", "Nice", "Lille", "Nantes"],
+                "Population": [10, 20, 15, 25, 18],
+            })
     
-    # Pour l'instant on utilise de fausses données pour tester
-    mock_data = pd.DataFrame({
-        "Catégorie": ["Type 1", "Type 2", "Type 1", "Type 2", "Type 1"],
-        "Valeur": [23, 45, 12, 67, 34],
-        "Latitude": [48.8566, 45.7640, 43.7102, 50.6292, 47.2184],
-        "Longitude": [2.3522, 4.8357, 7.2620, 3.0573, -1.5536],
-        "Nom de la ville": ["Paris", "Lyon", "Nice", "Lille", "Nantes"],
-        "Population": [10, 20, 15, 25, 18],
-    })
-    
-    df = mock_data
-
     # 2. Créer le graphique avec Plotly
     # ──────────────────────────────────────
     fig = px.bar(
@@ -74,7 +74,7 @@ def generer_html_milan():
 # CE BLOC SERT UNIQUEMENT À TESTER TON CODE TOUT SEUL (sans build.py)
 # ══════════════════════════════════════════════════════════════════
 if __name__ == "__main__":
-    res = generer_html_milan()
+    res = generer_html()
     html_complet = f"""
     <!DOCTYPE html>
     <html><head>
