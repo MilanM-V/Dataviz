@@ -65,6 +65,7 @@ def generer_html(df):
     return {
         "<!-- INJECTER_GRAPH_1 -->": graph_html,
         "<!-- INJECTER_STAT_1 -->": f"{df[df.columns[1]].mean():.1f}<span class='stat-highlight-suffix'>k</span>",
+        "<!-- INJECTER_STAT_1_LABEL -->": "Moyenne",
         # "<!-- INJECTER_GRAPH_2 -->": mon_autre_graph_html,
     }
 
