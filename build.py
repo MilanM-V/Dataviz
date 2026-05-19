@@ -13,6 +13,12 @@ Usage :
 """
 
 import pandas as pd
+import sys
+import codecs
+
+# Force l'encodage UTF-8 pour les emojis dans la console Windows
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
 
 # === Import des parties de chaque membre ===
 import partie_milan
