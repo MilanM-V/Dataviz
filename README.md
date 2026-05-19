@@ -102,3 +102,18 @@ Si Git refuse de fusionner, c'est que plusieurs personnes ont modifié le même 
 1. Restez sur votre branche perso.
 2. Demandez de l'aide à Milan ou à celui qui gère le Git.
 3. Le principe de cette architecture est que chacun a **son propre fichier**, donc les conflits devraient être quasi-inexistants !
+
+---
+
+## 🔄 5. Récupérer les mises à jour du design
+
+Si quelqu'un modifie le design global (`template.html` ou `style.css`) sur la branche `main`, voici la commande magique pour récupérer ces changements sur votre branche sans écraser votre travail :
+
+```bash
+# 1. Sauvegardez d'abord votre travail en cours
+git commit -am "Sauvegarde avant mise a jour"
+
+# 2. Récupérez les nouveautés de la branche main
+git merge origin/main
+```
+Cela mettra à jour votre template localement !
