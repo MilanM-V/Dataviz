@@ -1,11 +1,11 @@
 """
-partie_milan.py — Espace de travail de Milan
+partie_mamadou.py — Espace de travail de Mamadou
 ==============================================
 Ta seule mission : coder la fonction generer_html(df)
 qui retourne une STRING de HTML contenant tes graphiques.
 
 Exemple de test :
-    python partie_milan.py
+    python partie_mamadou.py
 """
 
 import pandas as pd
@@ -65,7 +65,7 @@ def generer_html(df):
 
 
 # ══════════════════════════════════════════
-# TEST LOCAL — lance : python partie_milan.py
+# TEST LOCAL — lance : python partie_mamadou.py
 # ══════════════════════════════════════════
 if __name__ == "__main__":
     # Crée des données fictives pour tester
@@ -78,13 +78,13 @@ if __name__ == "__main__":
     print(f"✅ HTML généré : {len(html)} caractères")
 
     # Sauvegarde un aperçu pour tester dans le navigateur
-    with open("test_milan.html", "w", encoding="utf-8") as f:
+    with open("test_mamadou.html", "w", encoding="utf-8") as f:
         f.write(f"""<!DOCTYPE html>
 <html><head>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head><body style="font-family:sans-serif; padding:2rem;">
-<h2>Test — partie_milan.py</h2>
+<h2>Test — partie_mamadou.py</h2>
 {html}
 </body></html>""")
 
-    print("📄 Ouvre test_milan.html dans Chrome pour voir le résultat")
+    print("📄 Ouvre test_mamadou.html dans Chrome pour voir le résultat")
