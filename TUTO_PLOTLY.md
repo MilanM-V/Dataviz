@@ -231,3 +231,40 @@ fig.update_layout(
 ```
 
 Avec ça, vous êtes parés pour faire des graphiques incroyables. Bon code à tous ! 🚀
+
+
+## 🧩 8. L'Injection Avancée (Le Dictionnaire)
+
+Pour placer vos graphiques et vos textes **exactement** où vous voulez dans le poster (Graphique 1, Statistique 2, KPI 3...), votre fonction Python doit renvoyer un **Dictionnaire**.
+
+### Comment ça marche ?
+Le fichier HTML contient des *trous* invisibles appelés balises (ex: `<!-- INJECTER_GRAPH_1 -->`, `<!-- INJECTER_KPI_1_VALEUR -->`).
+
+Vous dites simplement à Python : *"Mets ce graphique dans ce trou, et ce texte dans cet autre trou"*.
+
+### Exemple concret :
+```python
+def generer_html(df):
+    # 1. On crée le graphique
+    fig = px.bar(df, x="Ville", y="Population")
+    graph_html = fig.to_html(full_html=False, include_plotlyjs=False)
+
+    # 2. On calcule un chiffre clé
+    total_pop = df["Population"].sum()
+
+    # 3. LE DICTIONNAIRE MAGIQUE
+    return {
+        # Le grand graphique principal
+        "<!-- INJECTER_GRAPH_1 -->": graph_html,
+        
+        # La grande stat à côté du graphique
+        "<!-- INJECTER_STAT_1 -->": f"{total_pop} millions",
+        "<!-- INJECTER_STAT_1_LABEL -->": "Population Totale",
+        
+        # Un KPI tout en haut de la page
+        "<!-- INJECTER_KPI_1_VALEUR -->": "+4%",
+        "<!-- INJECTER_KPI_1_LABEL -->": "Croissance",
+    }
+```
+
+Grâce à ça, **vous contrôlez 100% de la page** depuis votre fichier Python, sans jamais avoir besoin de toucher au fichier `template.html` ! 🚀
