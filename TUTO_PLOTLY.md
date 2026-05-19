@@ -101,6 +101,13 @@ fig = px.scatter_mapbox(
 )
 ```
 
+> [!IMPORTANT]
+> **💡 Astuce de rendu (Points Invisibles) :**  
+> Si vous utilisez `px.scatter_geo` ou `px.scatter_mapbox` et que la carte s'affiche mais sans **aucun point dessus**, c'est généralement dû à la sérialisation des coordonnées par Pandas. 
+> Pour forcer Plotly à dessiner les points à tous les coups, convertissez vos coordonnées en listes Python simples :
+> `lat=df["Latitude"].tolist()` et `lon=df["Longitude"].tolist()`.
+
+
 ### 🗺️ Carte coloriée par zone (Choropleth)
 Idéal si vous avez des noms de pays ou un code de région.
 
