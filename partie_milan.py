@@ -21,11 +21,9 @@ def generer_html(df=None):
     # ──────────────────────────────────────
     fig = px.bar(
         df,
-        x="Catégorie",
-        y="Valeur",
+        x=df["Catégorie"].tolist(),
+        y=df["Valeur"].tolist(),
         title="Mon Super Graphique à moi",
-        color="Catégorie",
-        color_discrete_sequence=px.colors.qualitative.Pastel
     )
     
     # Rendre le graphique invisible (transparent) pour qu'il prenne le CSS du HTML
@@ -55,8 +53,7 @@ def generer_html(df=None):
         lataxis_range=[41, 52],
         lonaxis_range=[-5, 10]
     )
-    # On utilise "cdn" pour forcer la version de plotly.js compatible avec ton Python
-    carte_html = fig_geo.to_html(full_html=False, include_plotlyjs="cdn")
+    carte_html = fig_geo.to_html(full_html=False, include_plotlyjs=False)
     
     # ──────────────────────────────────────
     # 3. (Optionnel) Ajouter des métriques
@@ -79,6 +76,7 @@ if __name__ == "__main__":
     <!DOCTYPE html>
     <html><head>
     <meta charset="utf-8">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <link rel="stylesheet" href="style.css">
     </head><body style="font-family:sans-serif; padding:2rem; background: var(--bg);">
     <h2>Test — partie_milan.py</h2>
