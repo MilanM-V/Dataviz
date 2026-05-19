@@ -73,7 +73,7 @@ if __name__ == "__main__":
     <script src="https://cdn.plot.ly/plotly-3.4.0.min.js"></script>
     <link rel="stylesheet" href="style.css">
     </head><body style="font-family:sans-serif; padding:2rem; background: var(--bg);">
-    <h2>Test — partie_lois.py</h2>
+    <h2>Test — partie_milan.py</h2>
     {res["<!-- INJECTER_GRAPH_1 -->"]}
     <hr>
     <h3>{res["<!-- INJECTER_STAT_1_LABEL -->"]} : {res["<!-- INJECTER_STAT_1 -->"]}</h3>
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     </body></html>
     """
     
-    with open("test_lois.html", "w", encoding="utf-8") as f:
+    with open("test_milan.html", "w", encoding="utf-8") as f:
         f.write(html_complet)
         
-    print(f"fini test_lois.html")
+    print(f"fini test_milan.html")
