@@ -60,7 +60,7 @@ def generer_html(df):
     hover_name="Nom de la ville", # Ce qui s'affiche quand on passe la souris
     title="Carte des Villes"
     )
-    fig.update_geos(fitbounds="locations")
+    fig.update_geos(fitbounds="locations", scope="europe")
     carte_html = fig.to_html(full_html=False, include_plotlyjs=False)
     # ──────────────────────────────────────
     # 3. (Optionnel) Ajouter des métriques
@@ -87,19 +87,18 @@ def generer_html(df):
 if __name__ == "__main__":
     # Crée des données fictives pour tester
     mock_data = pd.DataFrame({
-        "Catégorie": ["A", "B", "C", "D", "E"],
+        "Catégorie": ["Type 1", "Type 2", "Type 1", "Type 2", "Type 1"],
         "Valeur": [23, 45, 12, 67, 34],
         "Latitude": [48.8566, 45.7640, 43.7102, 50.6292, 47.2184],
         "Longitude": [2.3522, 4.8357, 7.2620, 3.0573, -1.5536],
         "Nom de la ville": ["Paris", "Lyon", "Nice", "Lille", "Nantes"],
-        "Catégorie": ["Type 1", "Type 2", "Type 1", "Type 2", "Type 1"],
-        "taille": [10, 20, 15, 25, 18],
+        "Population": [10, 20, 15, 25, 18],
     })
 
     resultats = generer_html(mock_data)
     html_complet = "<br>".join(resultats.values())
     
-    print(f"✅ Généré {len(resultats)} éléments. Total : {len(html_complet)} caractères")
+    print(f"Genere {len(resultats)} elements. Total : {len(html_complet)} caracteres")
 
     # Sauvegarde un aperçu pour tester dans le navigateur
     with open("test_milan.html", "w", encoding="utf-8") as f:
@@ -112,4 +111,4 @@ if __name__ == "__main__":
 {html_complet}
 </body></html>""")
 
-    print("📄 Ouvre test_milan.html dans Chrome pour voir le résultat")
+    print("Ouvre test_milan.html dans Chrome pour voir le resultat")

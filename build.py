@@ -22,10 +22,7 @@ if sys.stdout.encoding != 'utf-8':
 
 # === Import des parties de chaque membre ===
 import partie_milan
-import partie_adam
-import partie_lois
-import partie_evan
-import partie_mamadou
+
 # import partie_membre2
 # import partie_membre3
 # import partie_membre4
@@ -56,7 +53,7 @@ def build():
     # Format : ("<!-- PLACEHOLDER -->", module)
     # ──────────────────────────────────────
 
-    injections_modules = [partie_milan, partie_adam, partie_lois, partie_evan, partie_mamadou]
+    injections_modules = [partie_milan]
     # injections_modules = [partie_milan, partie_membre2, partie_membre3, partie_membre4, partie_membre5]
 
     for module in injections_modules:
