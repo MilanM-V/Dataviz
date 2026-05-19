@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard BUT SD — Challenge National Datavis</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Plotly JS — chargé une seule fois pour tous les graphiques -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- CSS personnalisé (optionnel, peut rester vide) -->
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* Variables de couleurs → voir style.css */
+
+        /* ============================================
+           RESET & BASE
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-body);
+            line-height: 1.5;
+        }
+
+        /* ============================================
+           PAGE CONTAINER (format poster A3 / grand écran)
+           ============================================ */
+        .poster {
+            max-width: 1200px;
+            margin: 2rem auto;
+            background: var(--bg-white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        /* ============================================
+           EN-TÊTE / BANDEAU
+           ============================================ */
+        .poster-header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        .poster-header-left {
+            flex: 1;
+        }
+
+        .poster-logo {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        .poster-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+        }
+
+        .poster-subtitle {
+            font-size: 0.95rem;
+            font-weight: 400;
+            opacity: 0.85;
+            margin-top: 0.4rem;
+        }
+
+        .poster-header-right {
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .poster-year {
+            font-size: 2.5rem;
+            font-weight: 900;
+            opacity: 0.3;
+            line-height: 1;
+        }
+
+        .poster-team {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-top: 0.25rem;
+        }
+
+        /* ============================================
+           CONTENU — GRILLE PRINCIPALE
+           ============================================ */
+        .poster-body {
+            padding: 2rem 2.5rem;
+        }
+
+        /* ============================================
+           SECTION CHIFFRES CLÉS (KPI)
+           ============================================ */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-box {
+            background: var(--primary-bg-light);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 1.2rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary);
+        }
+
+        .kpi-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1.1;
+        }
+
+        .kpi-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-top: 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        /* ============================================
+           GRILLE DE GRAPHIQUES
+           ============================================ */
+
+        /* Ligne avec 2 blocs : un grand (carte/graph) + un petit (stats) */
+        .grid-row {
+            display: grid;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .grid-2col {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .grid-2col-wide {
+            grid-template-columns: 3fr 2fr;
+        }
+
+        .grid-3col {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .grid-1col {
+            grid-template-columns: 1fr;
+        }
+
+        /* ============================================
+           BLOC GRAPHIQUE / SECTION
+           ============================================ */
+        .chart-block {
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 1.25rem;
+            min-height: 280px;
+        }
+
+        .chart-block-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-block-title .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--primary);
+            flex-shrink: 0;
+        }
+
+        .chart-block-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .chart-content {
+            /* Zone où le graphique Plotly sera injecté */
+            min-height: 220px;
+        }
+
+        /* Placeholder visuel (avant injection) */
+        .chart-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 220px;
+            color: var(--text-light);
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            gap: 0.5rem;
+        }
+
+        .chart-placeholder svg {
+            width: 32px;
+            height: 32px;
+            opacity: 0.3;
+        }
+
+        /* ============================================
+           BLOC STAT / ENCADRÉ CHIFFRE
+           ============================================ */
+        .stat-highlight {
+            background: var(--primary-bg);
+            border-radius: var(--radius-sm);
+            padding: 1.5rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-highlight-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .stat-highlight-suffix {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-highlight-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            max-width: 200px;
+            line-height: 1.4;
+        }
+
+        /* ============================================
+           SOURCE / NOTE DE BAS
+           ============================================ */
+        .poster-footer {
+            padding: 1rem 2.5rem 1.5rem;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .poster-source {
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+
+        .poster-credits {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            text-align: right;
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 900px) {
+            .poster {
+                margin: 0;
+                border-radius: 0;
+            }
+            .poster-body {
+                padding: 1.5rem;
+            }
+            .poster-header {
+                padding: 1.5rem;
+                flex-direction: column;
+                text-align: center;
+            }
+            .poster-header-right {
+                text-align: center;
+            }
+            .grid-2col,
+            .grid-2col-wide,
+            .grid-3col {
+                grid-template-columns: 1fr;
+            }
+            .poster-title {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .poster {
+                box-shadow: none;
+                margin: 0;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="poster">
+
+        <!-- ====================================================
+             EN-TÊTE
+             ==================================================== -->
+        <header class="poster-header">
+            <div class="poster-header-left">
+                <div class="poster-logo">Challenge National Datavis — BUT Science des Données</div>
+                <h1 class="poster-title">Titre de la problématique</h1>
+                <p class="poster-subtitle">Sous-titre explicatif à adapter le jour du challenge</p>
+            </div>
+            <div class="poster-header-right">
+                <div class="poster-year">2025</div>
+                <div class="poster-team">Équipe BUT SD</div>
+            </div>
+        </header>
+
+        <!-- ====================================================
+             CONTENU
+             ==================================================== -->
+        <div class="poster-body">
+
+            <!-- ==============================================
+                 LIGNE 1 : CHIFFRES CLÉS
+                 ============================================== -->
+            <div class="kpi-row">
+                <!-- INJECTER_KPI -->
+                <div class="kpi-box">
+                    <div class="kpi-number">--</div>
+                    <div class="kpi-label">Métrique 1</div>
+                </div>
+                <div class="kpi-box">
+                    <div class="kpi-number">--%</div>
+                    <div class="kpi-label">Métrique 2</div>
+                </div>
+                <div class="kpi-box">
+                    <div class="kpi-number">--</div>
+                    <div class="kpi-label">Métrique 3</div>
+                </div>
+                <div class="kpi-box">
+                    <div class="kpi-number">--</div>
+                    <div class="kpi-label">Métrique 4</div>
+                </div>
+            </div>
+
+            <!-- ==============================================
+                 LIGNE 2 : GRAPHIQUE PRINCIPAL + STAT
+                 ============================================== -->
+            <div class="grid-row grid-2col-wide">
+
+                <!-- Bloc graphique principal (ex: carte, bar chart...) -->
+                <div class="chart-block">
+                    <div class="chart-block-title">
+                        <span class="dot"></span> Visualisation principale
+                    </div>
+                    <div class="chart-block-desc">Description à compléter</div>
+                    <div class="chart-content">
+                        <!-- INJECTER_GRAPH_1 -->
+                        <div class="chart-placeholder">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                            <span>Graphique injecté par build.py</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bloc stat / chiffre mis en avant -->
+                <div class="chart-block" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div class="stat-highlight" style="flex: 1;">
+                        <!-- INJECTER_STAT_1 -->
+                        <div class="stat-highlight-number">--<span class="stat-highlight-suffix">%</span></div>
+                        <div class="stat-highlight-label">Chiffre clé à mettre en valeur</div>
+                    </div>
+                    <div class="stat-highlight" style="flex: 1;">
+                        <!-- INJECTER_STAT_2 -->
+                        <div class="stat-highlight-number">--</div>
+                        <div class="stat-highlight-label">Second chiffre clé</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ==============================================
+                 LIGNE 3 : DEUX GRAPHIQUES CÔTE À CÔTE
+                 ============================================== -->
+            <div class="grid-row grid-2col">
+
+                <div class="chart-block">
+                    <div class="chart-block-title">
+                        <span class="dot"></span> Graphique 2
+                    </div>
+                    <div class="chart-block-desc">Description à compléter</div>
+                    <div class="chart-content">
+                        <!-- INJECTER_GRAPH_2 -->
+                        <div class="chart-placeholder">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6.36 3.64"/></svg>
+                            <span>Graphique injecté par build.py</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-block">
+                    <div class="chart-block-title">
+                        <span class="dot"></span> Graphique 3
+                    </div>
+                    <div class="chart-block-desc">Description à compléter</div>
+                    <div class="chart-content">
+                        <!-- INJECTER_GRAPH_3 -->
+                        <div class="chart-placeholder">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 20h18M5 20V10M9 20V4M13 20v-8M17 20V8M21 20v-6"/></svg>
+                            <span>Graphique injecté par build.py</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ==============================================
+                 LIGNE 4 : GRAPHIQUE LARGE PLEINE LARGEUR
+                 ============================================== -->
+            <div class="grid-row grid-1col">
+                <div class="chart-block">
+                    <div class="chart-block-title">
+                        <span class="dot"></span> Graphique 4
+                    </div>
+                    <div class="chart-block-desc">Description à compléter</div>
+                    <div class="chart-content">
+                        <!-- INJECTER_GRAPH_4 -->
+                        <div class="chart-placeholder">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg>
+                            <span>Graphique injecté par build.py</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==============================================
+                 LIGNE 5 : TROIS PETITS BLOCS
+                 ============================================== -->
+            <div class="grid-row grid-3col">
+
+                <div class="chart-block">
+                    <div class="chart-block-title">
+                        <span class="dot"></span> Graphique 5
+                    </div>
+                    <div class="chart-block-desc">Description</div>
+                    <div class="chart-content">
+                        <!-- INJECTER_GRAPH_5 -->
+                        <div class="chart-placeholder">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6.36 3.64"/></svg>
+                            <span>Graphique</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-block">
+                    <div class="chart-block-title">
+                        <span class="dot"></span> Graphique 6
+                    </div>
+                    <div class="chart-block-desc">Description</div>
+                    <div class="chart-content">
+                        <!-- INJECTER_GRAPH_6 -->
+                        <div class="chart-placeholder">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 20h18M5 20V10M9 20V4M13 20v-8M17 20V8M21 20v-6"/></svg>
+                            <span>Graphique</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-block">
+                    <div class="chart-block-title">
+                        <span class="dot"></span> Graphique 7
+                    </div>
+                    <div class="chart-block-desc">Description</div>
+                    <div class="chart-content">
+                        <!-- INJECTER_GRAPH_7 -->
+                        <div class="chart-placeholder">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg>
+                            <span>Graphique</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ====================================================
+             PIED DE PAGE
+             ==================================================== -->
+        <footer class="poster-footer">
+            <div class="poster-source">
+                Source : à compléter · Données : data_propre.csv
+            </div>
+            <div class="poster-credits">
+                Challenge National Datavis 2025 — Équipe BUT SD · Généré par build.py
+            </div>
+        </footer>
+
+    </div>
+
+</body>
+</html>

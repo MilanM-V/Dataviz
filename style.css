@@ -1,0 +1,155 @@
+/* ============================================
+   PALETTE DE COULEURS
+   ============================================
+   
+   Pour changer le thème, modifiez uniquement
+   les couleurs ci-dessous. Tout le template
+   s'adaptera automatiquement.
+
+   ============================================ */
+
+:root {
+    /* ----- COULEUR PRINCIPALE ----- */
+    --primary: #2d8a4e;            /* Vert principal */
+    --primary-light: #4caf6e;      /* Vert clair (hover, accents) */
+    --primary-dark: #1b6b38;       /* Vert foncé (header) */
+    --primary-bg: #e8f5ec;         /* Fond vert très léger (stats) */
+    --primary-bg-light: #f0f9f3;   /* Fond vert ultra léger (KPI) */
+
+    /* ----- COULEUR SECONDAIRE ----- */
+    --accent: #1a73a7;             /* Bleu accent */
+    --accent-light: #d6eaf8;       /* Bleu clair */
+
+    /* ----- FONDS ----- */
+    --bg: #f5f5f0;                 /* Fond de page */
+    --bg-white: #ffffff;           /* Fond des cartes */
+
+    /* ----- TEXTES ----- */
+    --text-dark: #1a1a2e;          /* Titres */
+    --text-body: #333333;          /* Texte courant */
+    --text-muted: #6b7280;         /* Texte secondaire */
+    --text-light: #9ca3af;         /* Texte discret */
+
+    /* ----- BORDURES ----- */
+    --border: #e0e0d8;             /* Bordure des blocs */
+    --border-light: #eeeeea;       /* Bordure légère */
+
+    /* ----- OMBRES ----- */
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+    /* ----- ARRONDIS ----- */
+    --radius: 12px;
+    --radius-sm: 8px;
+}
+
+
+/* ============================================
+   EXEMPLES DE THÈMES PRÊTS À L'EMPLOI
+   ============================================
+   
+   Pour utiliser un thème, décommentez le bloc
+   correspondant et commentez le bloc par défaut
+   ci-dessus.
+
+   ============================================ */
+
+
+/* ----- THÈME BLEU OCÉAN -----
+:root {
+    --primary: #1a73a7;
+    --primary-light: #3b9dd4;
+    --primary-dark: #0f5a85;
+    --primary-bg: #dbeef9;
+    --primary-bg-light: #edf6fc;
+    --accent: #e67e22;
+    --accent-light: #fde8d0;
+    --bg: #f0f4f8;
+    --bg-white: #ffffff;
+    --text-dark: #1a1a2e;
+    --text-body: #333333;
+    --text-muted: #6b7280;
+    --text-light: #9ca3af;
+    --border: #d6dfe8;
+    --border-light: #e8eef4;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --radius: 12px;
+    --radius-sm: 8px;
+}
+*/
+
+
+/* ----- THÈME VIOLET -----
+:root {
+    --primary: #7c3aed;
+    --primary-light: #a78bfa;
+    --primary-dark: #5b21b6;
+    --primary-bg: #ede9fe;
+    --primary-bg-light: #f5f3ff;
+    --accent: #ec4899;
+    --accent-light: #fce7f3;
+    --bg: #f5f3ff;
+    --bg-white: #ffffff;
+    --text-dark: #1e1b4b;
+    --text-body: #333333;
+    --text-muted: #6b7280;
+    --text-light: #9ca3af;
+    --border: #ddd6fe;
+    --border-light: #ede9fe;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --radius: 12px;
+    --radius-sm: 8px;
+}
+*/
+
+
+/* ----- THÈME ROUGE / CORAIL -----
+:root {
+    --primary: #dc2626;
+    --primary-light: #f87171;
+    --primary-dark: #991b1b;
+    --primary-bg: #fee2e2;
+    --primary-bg-light: #fef2f2;
+    --accent: #0ea5e9;
+    --accent-light: #e0f2fe;
+    --bg: #fafaf9;
+    --bg-white: #ffffff;
+    --text-dark: #1a1a2e;
+    --text-body: #333333;
+    --text-muted: #6b7280;
+    --text-light: #9ca3af;
+    --border: #e7e5e4;
+    --border-light: #f0efed;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --radius: 12px;
+    --radius-sm: 8px;
+}
+*/
+
+
+/* ----- THÈME DARK MODE -----
+:root {
+    --primary: #6366f1;
+    --primary-light: #818cf8;
+    --primary-dark: #4f46e5;
+    --primary-bg: rgba(99, 102, 241, 0.15);
+    --primary-bg-light: rgba(99, 102, 241, 0.08);
+    --accent: #f59e0b;
+    --accent-light: rgba(245, 158, 11, 0.15);
+    --bg: #0f172a;
+    --bg-white: #1e293b;
+    --text-dark: #f1f5f9;
+    --text-body: #e2e8f0;
+    --text-muted: #94a3b8;
+    --text-light: #64748b;
+    --border: #334155;
+    --border-light: #1e293b;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --radius: 12px;
+    --radius-sm: 8px;
+}
+*/
