@@ -1,0 +1,6 @@
+Catégorie,Valeur,Notes,Sexe,Nombre,Âge,Salaire,Mois,Revenus,Dépenses,Bénéfices,Région,Nombre d'étudiants,Année,Taux de réussite,Filière,Effectif,Latitude,Longitude,Taux de chômage,Population,Nom de la ville,Code Pays,PIB,Nom du Pays,Nom du Maire,Budget Annuel
+A,23,12,Homme,45,25,30000,Jan,5000,3000,2000,Bretagne,12000,2015,85,S,500,48.11,-1.67,8.2,350000,Rennes,FRA,40000,France,Jean,1000000
+B,45,15,Femme,60,30,45000,Feb,5500,3100,2400,Normandie,8000,2016,87,ES,400,49.18,-0.37,7.5,200000,Caen,FRA,42000,France,Marie,800000
+C,12,18,Homme,30,22,25000,Mar,6000,3200,2800,Occitanie,15000,2017,88,L,300,43.60,1.44,9.1,450000,Toulouse,FRA,38000,France,Paul,1200000
+D,67,11,Femme,55,45,60000,Apr,6200,3500,2700,Nouvelle-Aquitaine,11000,2018,89,STMG,350,44.83,-0.57,8.0,800000,Bordeaux,FRA,41000,France,Pierre,900000
+E,34,14,Homme,40,35,50000,May,6500,3600,2900,PACA,14000,2019,90,Pro,600,43.29,5.36,10.2,900000,Marseille,FRA,39000,France,Sophie,1500000

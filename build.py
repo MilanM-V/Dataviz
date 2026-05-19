@@ -22,6 +22,10 @@ if sys.stdout.encoding != 'utf-8':
 
 # === Import des parties de chaque membre ===
 import partie_milan
+import partie_adam
+import partie_lois
+import partie_evan
+import partie_mamadou
 # import partie_membre2
 # import partie_membre3
 # import partie_membre4
@@ -52,27 +56,21 @@ def build():
     # Format : ("<!-- PLACEHOLDER -->", module)
     # ──────────────────────────────────────
 
-    injections = {
-        "<!-- INJECTER_GRAPH_1 -->": partie_milan,
-        # "<!-- INJECTER_GRAPH_2 -->": partie_membre2,
-        # "<!-- INJECTER_GRAPH_3 -->": partie_membre3,
-        # "<!-- INJECTER_GRAPH_4 -->": partie_membre4,
-        # "<!-- INJECTER_GRAPH_5 -->": partie_membre5,
-    }
+    injections_modules = [partie_milan, partie_adam, partie_lois, partie_evan, partie_mamadou]
+    # injections_modules = [partie_milan, partie_membre2, partie_membre3, partie_membre4, partie_membre5]
 
-    for placeholder, module in injections.items():
+    for module in injections_modules:
         print(f"⚙️  Génération : {module.__name__}...")
         try:
-            html_genere = module.generer_html(df)
-            page = page.replace(placeholder, html_genere)
-            print(f"   ✅ {module.__name__} injecté")
+            # Récupère un dictionnaire { "<!-- PLACEHOLDER -->": "HTML", ... }
+            elements_html = module.generer_html(df)
+            
+            for placeholder, html_genere in elements_html.items():
+                page = page.replace(placeholder, html_genere)
+                print(f"   ✅ Injecté dans {placeholder}")
+                
         except Exception as e:
             print(f"   ❌ Erreur dans {module.__name__} : {e}")
-            # En cas d'erreur, on injecte un message visible
-            page = page.replace(
-                placeholder,
-                f'<div style="color:red; padding:1rem;">❌ Erreur : {e}</div>'
-            )
 
     # ──────────────────────────────────────
     # 4. Sauvegarder le rendu final
