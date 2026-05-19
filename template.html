@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- Plotly JS — chargé une seule fois pour tous les graphiques -->
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-3.4.0.min.js"></script>
 
     <!-- CSS personnalisé (optionnel, peut rester vide) -->
     <link rel="stylesheet" href="style.css">
@@ -373,22 +373,22 @@
                  LIGNE 1 : CHIFFRES CLÉS
                  ============================================== -->
             <div class="kpi-row">
-                <!-- INJECTER_KPI -->
+                <!-- Les 4 grands KPIs du haut -->
                 <div class="kpi-box">
-                    <div class="kpi-number">--</div>
-                    <div class="kpi-label">Métrique 1</div>
+                    <div class="kpi-number"><!-- INJECTER_KPI_1_VALEUR -->--</div>
+                    <div class="kpi-label"><!-- INJECTER_KPI_1_LABEL -->Métrique 1</div>
                 </div>
                 <div class="kpi-box">
-                    <div class="kpi-number">--%</div>
-                    <div class="kpi-label">Métrique 2</div>
+                    <div class="kpi-number"><!-- INJECTER_KPI_2_VALEUR -->--</div>
+                    <div class="kpi-label"><!-- INJECTER_KPI_2_LABEL -->Métrique 2</div>
                 </div>
                 <div class="kpi-box">
-                    <div class="kpi-number">--</div>
-                    <div class="kpi-label">Métrique 3</div>
+                    <div class="kpi-number"><!-- INJECTER_KPI_3_VALEUR -->--</div>
+                    <div class="kpi-label"><!-- INJECTER_KPI_3_LABEL -->Métrique 3</div>
                 </div>
                 <div class="kpi-box">
-                    <div class="kpi-number">--</div>
-                    <div class="kpi-label">Métrique 4</div>
+                    <div class="kpi-number"><!-- INJECTER_KPI_4_VALEUR -->--</div>
+                    <div class="kpi-label"><!-- INJECTER_KPI_4_LABEL -->Métrique 4</div>
                 </div>
             </div>
 
@@ -415,14 +415,12 @@
                 <!-- Bloc stat / chiffre mis en avant -->
                 <div class="chart-block" style="display: flex; flex-direction: column; gap: 1rem;">
                     <div class="stat-highlight" style="flex: 1;">
-                        <!-- INJECTER_STAT_1 -->
-                        <div class="stat-highlight-number">--<span class="stat-highlight-suffix">%</span></div>
-                        <div class="stat-highlight-label">Chiffre clé à mettre en valeur</div>
+                        <div class="stat-highlight-number"><!-- INJECTER_STAT_1 --></div>
+                        <div class="stat-highlight-label"><!-- INJECTER_STAT_1_LABEL --></div>
                     </div>
                     <div class="stat-highlight" style="flex: 1;">
-                        <!-- INJECTER_STAT_2 -->
-                        <div class="stat-highlight-number">--</div>
-                        <div class="stat-highlight-label">Second chiffre clé</div>
+                        <div class="stat-highlight-number"><!-- INJECTER_STAT_2 --></div>
+                        <div class="stat-highlight-label"><!-- INJECTER_STAT_2_LABEL --></div>
                     </div>
                 </div>
 

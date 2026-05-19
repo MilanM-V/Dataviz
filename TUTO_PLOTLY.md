@@ -87,17 +87,26 @@ Si vous avez une colonne avec des noms de pays, de régions ou des coordonnées 
 Si vous avez la longitude et latitude :
 
 ```python
-fig = px.scatter_geo(
+fig = px.scatter_mapbox(
     df,
     lat="Latitude",
     lon="Longitude",
     color="Taux de chômage", # La couleur du point dépend du taux
     size="Population", # La taille du point dépend de la population
     hover_name="Nom de la ville", # Ce qui s'affiche quand on passe la souris
+    zoom=4, # Niveau de zoom initial
+    center={"lat": 46.2276, "lon": 2.2137}, # Centre sur la France
+    mapbox_style="carto-positron", # Style de fond de carte très propre
     title="Carte des Villes"
 )
-fig.update_geos(fitbounds="locations") # Pour zoomer automatiquement sur la France !
 ```
+
+> [!IMPORTANT]
+> **💡 Astuce de rendu (Points Invisibles) :**  
+> Si vous utilisez `px.scatter_geo` ou `px.scatter_mapbox` et que la carte s'affiche mais sans **aucun point dessus**, c'est généralement dû à la sérialisation des coordonnées par Pandas. 
+> Pour forcer Plotly à dessiner les points à tous les coups, convertissez vos coordonnées en listes Python simples :
+> `lat=df["Latitude"].tolist()` et `lon=df["Longitude"].tolist()`.
+
 
 ### 🗺️ Carte coloriée par zone (Choropleth)
 Idéal si vous avez des noms de pays ou un code de région.
