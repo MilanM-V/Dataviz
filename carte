@@ -2,73 +2,32 @@ import pandas as pd
 import plotly.express as px
 import requests
 
-# 1. Chargement de vos données Excel
-# Assurez-vous d'avoir fermé Excel avant de lancer le script !
-nom_fichier_excel = "evolution_taux_urbanisation.xlsx"
-df = pd.read_excel(nom_fichier_excel)
-
-# Optionnel : si vos codes départements n'ont pas 2 caractères (ex: '1' au lieu de '01')
-# On les force en texte pour correspondre au fond de carte
+# 1. Chargement des données Excel et du GeoJSON des départements
+df = pd.read_excel("evolution_taux_urbanisation.xlsx")
 df['Code_Dept'] = df['Code dep'].astype(str).str.zfill(2)
 
-# 2. Téléchargement automatique des contours des départements français (GeoJSON)
 geojson_url = "https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/departements-version-simplifiee.geojson"
 repo_geojson = requests.get(geojson_url).json()
 
-# 3. Création de la carte choroplèthe
+# 2. Création de la carte choroplèthe
 fig = px.choropleth(
-    df, 
-    geojson=repo_geojson, 
-    locations='Code_Dept',          # La colonne avec le code (01, 02...)
-    featureidkey='properties.code', # La clé correspondante dans le GeoJSON
-    color='taux_urb_2022',          # La colonne à utiliser pour la couleur (valeur entre 0 et 1)
-    range_color=[0.0, 1.0],         # Plage fixe de 0% à 100% pour centrer le point de pivot à 50%
-    
-    # Palette de couleurs : Dégradé séquentiel de bleu (du bleu très clair au bleu marine foncé)
-    # Plus le taux d'urbanisation est élevé, plus le bleu est foncé.
-    color_continuous_scale="Blues",
-    
-    # Titres et étiquettes
-    labels={
-        'taux_urb_2022': "Taux d'urbanisation",
-        'Code_Dept': "Code"
-    },
+    df, geojson=repo_geojson, locations='Code_Dept', featureidkey='properties.code',
+    color='taux_urb_2022', range_color=[0.0, 1.0], color_continuous_scale="Blues",
+    labels={'taux_urb_2022': "Taux d'urbanisation", 'Code_Dept': "Code"},
     title="Taux d'urbanisation par département en France Métropolitaine (2022)",
-    
-    center={"lat": 46.2276, "lon": 2.2137},
-    scope="europe"
+    center={"lat": 46.2276, "lon": 2.2137}, scope="europe"
 )
 
-# 4. Ajustements graphiques pour zoomer sur la France et épurer le style
-fig.update_geos(
-    projection_type="mercator", 
-    visible=False,
-    fitbounds="locations" # Zoom automatique serré sur vos départements
-)
-
-# Bordures fines et blanches entre les départements pour plus de netteté
-fig.update_traces(
-    marker_line_color="rgba(255, 255, 255, 0.5)", 
-    marker_line_width=0.5
-)
-
+# 3. Ajustements et style épuré
+fig.update_geos(projection_type="mercator", visible=False, fitbounds="locations")
+fig.update_traces(marker_line_color="rgba(255, 255, 255, 0.5)", marker_line_width=0.5)
 fig.update_layout(
-    font_family="Inter, Arial, sans-serif",
-    title_font_size=16,
-    title_x=0.5, # Centrer le titre
-    margin={"r":0,"t":50,"l":0,"b":0},
-    coloraxis_colorbar=dict(
-        title="Taux d'urbanisation", 
-        tickformat=".0%", # Format % sur la légende (ex : 75%)
-        thicknessmode="pixels", thickness=15,
-        lenmode="fraction", len=0.6,
-        x=0.9, y=0.5
-    )
+    font_family="Inter, Arial, sans-serif", title_x=0.5, margin={"r":0,"t":50,"l":0,"b":0},
+    coloraxis_colorbar=dict(title="Taux", tickformat=".0%", thickness=15, len=0.6, x=0.9, y=0.5)
 )
 
-# 5. Sauvegarde au format HTML Statique (interactivité désactivée: pas de zoom, pas de survol)
-nom_carte = "carte_urbanisation_france_2022.html"
-fig.write_html(nom_carte, config={'staticPlot': True})
+# 4. Sauvegarde en HTML léger (avec CDN) et en JPEG
+fig.write_html("carte_urbanisation_france_2022.html", include_plotlyjs="cdn", config={'staticPlot': True})
+fig.write_image("carte_urbanisation_france_2022.jpeg")
 
-print(f"Magnifique ! Votre carte statique a été générée ici : {nom_carte}")
-# Pour l'ouvrir, double-cliquez simplement sur le fichier HTML créé !
+print("Succès : Fichier HTML (léger via CDN) et image JPEG générés !")
