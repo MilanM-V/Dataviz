@@ -2,7 +2,7 @@ import pandas as pd
 import plotly.express as px
 
 def generer_html(df=None):
-    #Charger les données
+    #Charger les donnéesd
     if df is None:
         try:
             df=pd.read_csv("data_propre.csv")
