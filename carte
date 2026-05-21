@@ -19,10 +19,19 @@ fig = px.choropleth(
 )
 
 # 3. Ajustements et style épuré
-fig.update_geos(projection_type="mercator", visible=False, fitbounds="locations")
+fig.update_geos(
+    projection_type="mercator",
+    visible=False,
+    center=dict(lon=2.2137, lat=46.2276),
+    lataxis_range=[41, 51.2],
+    lonaxis_range=[-5, 9.8]
+)
 fig.update_traces(marker_line_color="rgba(255, 255, 255, 0.5)", marker_line_width=0.5)
 fig.update_layout(
-    font_family="Inter, Arial, sans-serif", title_x=0.5, margin={"r":0,"t":50,"l":0,"b":0},
+    font_family="Inter, Arial, sans-serif",
+    title_x=0.5,
+    title_y=0.99,
+    margin={"r":0,"t":40,"l":0,"b":0},
     coloraxis_colorbar=dict(title="Taux", tickformat=".0%", thickness=15, len=0.6, x=0.9, y=0.5)
 )
 
