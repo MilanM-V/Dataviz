@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard BUT SD — Challenge National Datavis</title>
+    <title>Dashboard BUT SD — Challenge National Dataviz</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
 
     <!-- Plotly JS — chargé une seule fois pour tous les graphiques -->
     <script src="https://cdn.plot.ly/plotly-3.4.0.min.js"></script>
+
+    <!-- html2canvas JS pour l'exportation haute-fidélité en image -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <!-- CSS personnalisé (optionnel, peut rester vide) -->
     <link rel="stylesheet" href="style.css">
@@ -225,10 +230,21 @@
             border-radius: 50%;
         }
 
-        .legend-dot--2016 { background: #f0e050; }
-        .legend-dot--2022 { background: #00d4ff; }
-        .legend-dot--red  { background: #e53935; }
-        .legend-dot--green { background: #43a047; }
+        .legend-dot--2016 {
+            background: #f0e050;
+        }
+
+        .legend-dot--2022 {
+            background: #00d4ff;
+        }
+
+        .legend-dot--red {
+            background: #e53935;
+        }
+
+        .legend-dot--green {
+            background: #43a047;
+        }
 
         /* ============================================
            CARTES — bas de page
@@ -323,33 +339,115 @@
             gap: 0.5rem;
         }
 
-        .poster-source, .poster-credits {
+        .poster-source,
+        .poster-credits {
             font-size: 0.7rem;
             color: var(--text-light);
         }
 
-        .poster-credits { text-align: right; }
+        .poster-credits {
+            text-align: right;
+        }
 
         /* ============================================
            RESPONSIVE
            ============================================ */
+        .side-by-side-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2.5rem;
+            margin-bottom: 3.5rem;
+            width: 100%;
+        }
+
+        /* Style spécial d'exportation haute-fidélité pour forcer le mode desktop 1200px sans réactivité mobile */
+        body.exporting {
+            width: 1200px !important;
+            min-width: 1200px !important;
+            overflow: visible !important;
+            background: #FFFFFF !important;
+        }
+
+        body.exporting .poster {
+            width: 1200px !important;
+            max-width: 1200px !important;
+            min-width: 1200px !important;
+            margin: 0 !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            transform: none !important;
+        }
+
         @media (max-width: 900px) {
-            .poster { margin: 0; border-radius: 0; }
-            .poster-body { padding: 1.5rem; }
-            .kpi-row { grid-template-columns: 1fr; }
-            .graph-row { flex-direction: column; }
-            .graph-text { width: 100%; }
-            .cards-row { grid-template-columns: 1fr; }
-            .poster-title { font-size: 1.2rem; }
-            .poster-note { position: static; text-align: center; margin-top: 0.5rem; }
+            body:not(.exporting) .poster {
+                margin: 0;
+                border-radius: 0;
+            }
+
+            body:not(.exporting) .poster-body {
+                padding: 1.5rem;
+            }
+
+            body:not(.exporting) .kpi-row {
+                grid-template-columns: 1fr;
+            }
+
+            body:not(.exporting) .graph-row {
+                flex-direction: column;
+            }
+
+            body:not(.exporting) .graph-text {
+                width: 100%;
+            }
+
+            body:not(.exporting) .cards-row {
+                grid-template-columns: 1fr;
+            }
+
+            body:not(.exporting) .poster-title {
+                font-size: 1.2rem;
+            }
+
+            body:not(.exporting) .poster-note {
+                position: static;
+                text-align: center;
+                margin-top: 0.5rem;
+            }
+
+            body:not(.exporting) .side-by-side-row {
+                flex-direction: column !important;
+                gap: 1.8rem !important;
+                margin-bottom: 2.5rem !important;
+            }
+
+            body:not(.exporting) .side-by-side-row>div {
+                width: 100% !important;
+                flex: 1 1 100% !important;
+            }
         }
 
         @media print {
-            body { background: white; }
-            .poster { box-shadow: none; margin: 0; max-width: 100%; }
+            .export-buttons-container {
+                display: none !important;
+            }
+
+            body {
+                background: white !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .poster {
+                margin: 0 !important;
+                box-shadow: none !important;
+                max-width: 100% !important;
+                border-radius: 0 !important;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <div class="poster">
@@ -357,99 +455,204 @@
         <!-- ====================================================
              TITRE
              ==================================================== -->
-        <header class="poster-header">
-            <div class="poster-header-top">
-                <h1 class="poster-title">Comment la démographie évolue en fonction du degré de densité de 2016 à 2022 ?</h1>
-                <div class="poster-note">*hors France non<br>métropolitaine</div>
+        <header class="poster-header" style="padding: 2.5rem 2.5rem 1.5rem;">
+            <!-- Top bar with buttons and metadata -->
+            <div class="export-buttons-row"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; width: 100%; border-bottom: 1px solid rgba(0,0,0,0.06); padding-bottom: 1.2rem;">
+                <!-- Logos et texte sur la gauche -->
+                <div style="display: flex; align-items: center; gap: 1.2rem; flex-wrap: nowrap; flex-shrink: 0;">
+                    <div
+                        style="display: flex; align-items: center; gap: 1rem; background: #FAFBFD; padding: 0.4rem 0.8rem; border-radius: 8px; border: 1px solid rgba(0,0,0,0.04); flex-shrink: 0; flex-wrap: nowrap;">
+                        <img src="img/logo_but_sd.png" alt="Logo BUT SD"
+                            style="height: 30px; width: auto; display: block; flex-shrink: 0;">
+                        <img src="img/Logo_de_l'Université_Marie-et-Louis-Pasteur.png"
+                            alt="Logo Université Marie-et-Louis-Pasteur"
+                            style="height: 30px; width: auto; display: block; flex-shrink: 0;">
+                        <img src="img/Logo_Insee_2025.svg.png" alt="Logo INSEE"
+                            style="height: 30px; width: auto; display: block; flex-shrink: 0;">
+                    </div>
+                    <div
+                        style="width: 1px; height: 24px; background-color: rgba(0,0,0,0.15); margin: 0 0.2rem; flex-shrink: 0;">
+                    </div>
+                    <span
+                        style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--primary-light); font-family: 'Inter', sans-serif; flex-shrink: 0; white-space: nowrap;">Challenge
+                        National Dataviz 2026</span>
+                </div>
+                <div class="export-buttons-container" style="display: flex; align-items: center; gap: 0.8rem;">
+                    <!-- Bouton Image PNG -->
+                    <button onclick="exportAsImage()" class="export-btn export-img-btn"
+                        onmouseover="this.style.backgroundColor='#0090D0'; this.style.transform='translateY(-1px)';"
+                        onmouseout="this.style.backgroundColor='#00B0FF'; this.style.transform='none';"
+                        style="display: inline-flex; align-items: center; gap: 0.5rem; background-color: #00B0FF; color: white; border: none; border-radius: 8px; padding: 0.6rem 1.2rem; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; font-family: 'Inter', sans-serif; box-shadow: 0 2px 6px rgba(0,176,255,0.25);">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                            <polyline points="21 15 16 10 5 21"></polyline>
+                        </svg>
+                        Exporter en Image (PNG)
+                    </button>
+                    <!-- Bouton PDF -->
+                    <button onclick="window.print()" class="export-btn export-pdf-btn"
+                        onmouseover="this.style.backgroundColor='#30336b'; this.style.transform='translateY(-1px)';"
+                        onmouseout="this.style.backgroundColor='#1F2147'; this.style.transform='none';"
+                        style="display: inline-flex; align-items: center; gap: 0.5rem; background-color: #1F2147; color: white; border: none; border-radius: 8px; padding: 0.6rem 1.2rem; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; font-family: 'Inter', sans-serif; box-shadow: 0 2px 6px rgba(31,33,71,0.25);">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Exporter en PDF
+                    </button>
+                </div>
             </div>
-            <div class="poster-title-underline"></div>
+
+            <!-- Title block spanning across the entire width -->
+            <div style="width: 100%;">
+                <h1 class="poster-title"
+                    style="font-size: 2.3rem; font-weight: 900; color: #1F2147; letter-spacing: -0.5px; margin: 0; line-height: 1.2; font-family: 'Inter', sans-serif; width: 100%;">
+                    La croissance démographique de 2016 à 2022 reste concentrée dans les pôles urbains, malgré
+                    l'attractivité migratoire du milieu rural
+                </h1>
+                <p
+                    style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600; margin-top: 0.6rem; font-family: 'Inter', sans-serif; font-style: italic;">
+                    * Données analysées hors France non métropolitaine
+                </p>
+            </div>
+            <div class="poster-title-underline" style="margin-top: 1.2rem; height: 4px;"></div>
         </header>
 
         <div class="poster-body">
 
             <!-- ==============================================
-                 LIGNE 1 : 3 KPI (bords arrondis)
+                 LIGNE 1 : 3 KPI (Fond blanc - Alignés selon le mockup)
                  ============================================== -->
-            <div class="kpi-row">
-                <div class="kpi-box">
-                    <div class="kpi-number"><!-- INJECTER_KPI_1_VALEUR --></div>
-                    <div class="kpi-label"><!-- INJECTER_KPI_1_LABEL --></div>
+            <div
+                style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 2.5rem; width: 100%; align-items: stretch;">
+
+                <!-- KPI 1 -->
+                <div
+                    style="display: flex; flex-direction: column; align-items: center; text-align: center; justify-content: space-between; padding: 0.5rem;">
+                    <div
+                        style="font-family: 'Inter', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60px; line-height: 1.3;">
+                        <span style="font-size: 1.25rem; font-weight: 800; color: #1F2147;">L’évolution du solde
+                            naturel</span>
+                        <span
+                            style="font-size: 0.85rem; font-weight: 600; color: #555555; margin-top: 0.3rem;">(2016-2022)</span>
+                    </div>
+                    <div
+                        style="font-size: 5.5rem; font-weight: 800; color: #00B0FF; line-height: 1; margin: 0.8rem 0; font-family: 'Inter', sans-serif; letter-spacing: -2px;">
+                        x5,77
+                    </div>
+                    <div
+                        style="font-size: 0.95rem; font-weight: 600; color: #333333; line-height: 1.4; font-family: 'Inter', sans-serif;">
+                        <span style="color: #00B0FF; font-weight: 800;">5,77 fois plus</span> de naissance en <span
+                            style="color: #00B0FF; font-weight: 800;">urbain</span> qu'en <span
+                            style="color: #E5A93B; font-weight: 800;">rural</span>
+                    </div>
                 </div>
-                <div class="kpi-box">
-                    <div class="kpi-number"><!-- INJECTER_KPI_2_VALEUR --></div>
-                    <div class="kpi-label"><!-- INJECTER_KPI_2_LABEL --></div>
+
+                <!-- KPI 2 -->
+                <div
+                    style="display: flex; flex-direction: column; align-items: center; text-align: center; justify-content: space-between; padding: 0.5rem;">
+                    <div
+                        style="font-family: 'Inter', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60px; line-height: 1.3;">
+                        <span style="font-size: 1.25rem; font-weight: 800; color: #1F2147;">L’évolution du solde
+                            migratoire</span>
+                        <span
+                            style="font-size: 0.85rem; font-weight: 600; color: #555555; margin-top: 0.3rem;">(2016-2022)</span>
+                    </div>
+                    <div
+                        style="font-size: 5.5rem; font-weight: 800; color: #E5A93B; line-height: 1; margin: 0.8rem 0; font-family: 'Inter', sans-serif; letter-spacing: -2px;">
+                        x1,40
+                    </div>
+                    <div
+                        style="font-size: 0.95rem; font-weight: 600; color: #333333; line-height: 1.4; font-family: 'Inter', sans-serif;">
+                        <span style="color: #E5A93B; font-weight: 800;">1,40 fois plus</span> de migration en <span
+                            style="color: #E5A93B; font-weight: 800;">rural</span> qu'en <span
+                            style="color: #00B0FF; font-weight: 800;">urbain</span>
+                    </div>
                 </div>
-                <div class="kpi-box">
-                    <div class="kpi-number"><!-- INJECTER_KPI_3_VALEUR --></div>
-                    <div class="kpi-label"><!-- INJECTER_KPI_3_LABEL --></div>
+
+                <!-- KPI 3 -->
+                <div
+                    style="display: flex; flex-direction: column; align-items: center; text-align: center; justify-content: space-between; padding: 0.5rem;">
+                    <div
+                        style="font-family: 'Inter', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60px; line-height: 1.3;">
+                        <span style="font-size: 1.25rem; font-weight: 800; color: #1F2147;">L’évolution de la
+                            population</span>
+                        <span
+                            style="font-size: 0.85rem; font-weight: 600; color: #555555; margin-top: 0.3rem;">(2016-2022)</span>
+                    </div>
+                    <div
+                        style="font-size: 5.5rem; font-weight: 800; color: #00B0FF; line-height: 1; margin: 0.8rem 0; font-family: 'Inter', sans-serif; letter-spacing: -2px;">
+                        x4,27
+                    </div>
+                    <div
+                        style="font-size: 0.95rem; font-weight: 600; color: #333333; line-height: 1.4; font-family: 'Inter', sans-serif;">
+                        <span style="color: #00B0FF; font-weight: 800;">4,27 fois plus</span> d’habitants en <span
+                            style="color: #00B0FF; font-weight: 800;">urbain</span> qu'en <span
+                            style="color: #E5A93B; font-weight: 800;">rural</span>
+                    </div>
                 </div>
+
             </div>
 
             <!-- ==============================================
-                 LIGNE 2 : GRAPHIQUE 1 + zone texte à côté
+                 LIGNE 2 : GRAPHIQUE 1 (Barres empilées - Plein Écran / Centré)
                  ============================================== -->
-            <div class="graph-row">
-                <div class="graph-zone">
-                    <div class="chart-content">
-                        <!-- INJECTER_GRAPH_1 -->
-                        <div class="chart-placeholder">Emplacement graphique 1</div>
-                    </div>
-                </div>
-                <div class="graph-text">
-                    <div class="graph-text-title"><!-- INJECTER_GRAPH_1_TITRE --></div>
-                    <div class="graph-text-desc"><!-- INJECTER_GRAPH_1_TEXTE --></div>
-                    <div class="legend">
-                        <!-- INJECTER_GRAPH_1_LEGENDE -->
-                    </div>
-                </div>
+            <div style="width: 100%; display: flex; flex-direction: column; align-items: center; margin-bottom: 4rem;">
+                <img src="img/newplot (2)(1).png" alt="Évolution temporelle de la structure démographique (2016-2022)"
+                    style="width: 100%; max-width: 1120px; max-height: 650px; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.035));">
             </div>
 
             <!-- ==============================================
-                 LIGNE 3 : GRAPHIQUE 2 + zone texte à côté
+                 LIGNE 3 : GRAPHIQUE 2 (Silhouettes - Image)
                  ============================================== -->
-            <div class="graph-row">
-                <div class="graph-zone">
-                    <div class="chart-content">
-                        <!-- INJECTER_GRAPH_2 -->
-                        <div class="chart-placeholder">Emplacement graphique 2</div>
-                    </div>
-                </div>
-                <div class="graph-text">
-                    <div class="graph-text-title"><!-- INJECTER_GRAPH_2_TITRE --></div>
-                    <div class="graph-text-desc"><!-- INJECTER_GRAPH_2_TEXTE --></div>
-                    <div class="legend">
-                        <!-- INJECTER_GRAPH_2_LEGENDE -->
-                    </div>
-                </div>
-            </div>
+            <div style="width: 100%; display: flex; justify-content: center; margin-bottom: 4rem;">
+                <div
+                    style="display: flex; align-items: stretch; justify-content: center; width: 100%; max-width: 850px; gap: 3rem; color: var(--text-dark);">
 
-            <!-- ==============================================
-                 LIGNE 4 : Analyse texte + Carte
-                 ============================================== -->
-            <div class="cards-row">
-
-                <!-- Bloc 1 : Analyse carte (zone de TEXTE, bords arrondis) -->
-                <div class="card-block">
-                    <div class="card-block-title"><!-- INJECTER_ANALYSE_TITRE --></div>
-                    <div class="card-block-content card-block-text">
-                        <!-- INJECTER_ANALYSE_TEXTE -->
-                    </div>
-                </div>
-
-                <!-- Bloc 2 : Carte (bords droits) -->
-                <div class="card-block card-block--square">
-                    <div class="card-block-title"><!-- INJECTER_CARTE_TITRE --></div>
-                    <div class="card-block-content">
-                        <div class="chart-content">
-                            <!-- INJECTER_GRAPH_3 -->
-                            <div class="chart-placeholder">Emplacement carte</div>
+                    <!-- Colonne Gauche (2016) -->
+                    <div
+                        style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+                        <div
+                            style="font-size: 1.25rem; font-weight: 800; margin-bottom: 1.5rem; color: var(--text-dark); line-height: 1.4; font-family: 'Inter', sans-serif;">
+                            En 2016, <span
+                                style="font-size: 2.2rem; font-weight: 900; color: #E5A93B; vertical-align: middle; margin: 0 0.2rem;">34%</span>
+                            de la population vit en milieu rural
                         </div>
+                        <img src="img/pictogramme(1).png" alt="Silhouette population 2016"
+                            style="height: 380px; object-fit: contain;">
                     </div>
-                    <div class="card-legend">
-                        <!-- INJECTER_CARTE_LEGENDE -->
-                    </div>
-                </div>
 
+                    <!-- Séparateur vertical -->
+                    <div style="width: 1px; background-color: rgba(0,0,0,0.1); margin: 0; align-self: stretch;"></div>
+
+                    <!-- Colonne Droite (2022) -->
+                    <div
+                        style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+                        <div
+                            style="font-size: 1.25rem; font-weight: 800; margin-bottom: 1.5rem; color: var(--text-dark); line-height: 1.4; font-family: 'Inter', sans-serif;">
+                            En 2022, <span
+                                style="font-size: 2.2rem; font-weight: 900; color: #E5A93B; vertical-align: middle; margin: 0 0.2rem;">33%</span>
+                            de la population vit en milieu rural
+                        </div>
+                        <img src="img/pictogramme2(1).png" alt="Silhouette population 2022"
+                            style="height: 380px; object-fit: contain;">
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ==============================================
+                 LIGNE 4 : Carte choroplèthe de la France (Centrée et en Plein)
+                 ============================================== -->
+            <div style="width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 3rem;">
+                <img src="img/carte_urbanisation_france_2022(3).jpeg"
+                    alt="Taux d'urbanisation de la France par département"
+                    style="width: 100%; max-width: 820px; max-height: 650px; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.035));">
             </div>
 
         </div>
@@ -459,10 +662,156 @@
              ==================================================== -->
         <footer class="poster-footer">
             <div class="poster-source">Source : INSEE · La demographie dans les territoires</div>
-            <div class="poster-credits">Challenge National Dataviz 2026 - Par Evan Lamy, Loïs Carré, Mamadou Diouf, Adam Alab et Milan Marchand--Valat</div>
+            <div class="poster-credits">Challenge National Dataviz 2026 - Par Evan Lamy, Loïs Carré, Mamadou Diouf, Adam
+                Allab et Milan Marchand--Valat</div>
         </footer>
 
     </div>
 
+    <!-- Script de capture d'image haute-fidélité -->
+    <script>
+        function exportAsImage() {
+            const poster = document.querySelector('.poster');
+
+            // Étape 1 : Mémoriser le défilement actuel de l'utilisateur
+            const scrollX = window.scrollX;
+            const scrollY = window.scrollY;
+
+            // Étape 1.5 : Forcer temporairement un viewport large sur le document d'origine
+            // pour empêcher la troncature due à la largeur de l'écran du navigateur
+            const originalBodyWidth = document.body.style.width;
+            const originalBodyMinWidth = document.body.style.minWidth;
+            const originalBodyOverflow = document.body.style.overflow;
+            const originalHtmlWidth = document.documentElement.style.width;
+            const originalHtmlMinWidth = document.documentElement.style.minWidth;
+            const originalHtmlOverflow = document.documentElement.style.overflow;
+
+            document.body.style.width = '1400px';
+            document.body.style.minWidth = '1400px';
+            document.body.style.overflow = 'visible';
+            document.documentElement.style.width = '1400px';
+            document.documentElement.style.minWidth = '1400px';
+            document.documentElement.style.overflow = 'visible';
+
+            // Étape 2 : Faire défiler temporairement vers le haut de la page pour éviter les décalages de capture
+            window.scrollTo(0, 0);
+
+            // Marges blanches de sécurité tout autour du poster (35px de chaque côté) pour éliminer DEFINITIVEMENT le rognage
+            const paddingValue = 35;
+            const targetWidth = 1200 + (paddingValue * 2); // 1270px
+
+            // Étape 3 : Créer un conteneur temporaire visible au moteur de rendu mais masqué à l'utilisateur
+            const tempContainer = document.createElement('div');
+            tempContainer.style.position = 'fixed';
+            tempContainer.style.top = '0';
+            tempContainer.style.left = '0';
+            tempContainer.style.width = targetWidth + 'px';
+            tempContainer.style.zIndex = '-9999';
+            tempContainer.style.overflow = 'visible';
+            tempContainer.style.pointerEvents = 'none';
+            tempContainer.style.backgroundColor = '#FFFFFF';
+            document.body.appendChild(tempContainer);
+
+            // Étape 4 : Créer un wrapper d'exportation avec un padding de sécurité blanc
+            const exportWrapper = document.createElement('div');
+            exportWrapper.style.padding = paddingValue + 'px';
+            exportWrapper.style.backgroundColor = '#FFFFFF';
+            exportWrapper.style.width = targetWidth + 'px';
+            exportWrapper.style.boxSizing = 'border-box';
+            exportWrapper.style.display = 'block';
+
+            // Cloner proprement le poster
+            const clone = poster.cloneNode(true);
+
+            // Retirer le conteneur des boutons d'export du clone pour ne pas les inclure dans le PNG
+            const cloneButtons = clone.querySelector('.export-buttons-container');
+            if (cloneButtons) {
+                cloneButtons.remove();
+            }
+
+            // Assurer le style du clone à exactement 1200px de large
+            clone.style.width = '1200px';
+            clone.style.maxWidth = '1200px';
+            clone.style.minWidth = '1200px';
+            clone.style.margin = '0';
+            clone.style.boxShadow = 'none';
+            clone.style.borderRadius = '0';
+            clone.style.display = 'block';
+
+            exportWrapper.appendChild(clone);
+            tempContainer.appendChild(exportWrapper);
+
+            // Récupérer la hauteur réelle calculée du wrapper d'export
+            const wrapperHeight = exportWrapper.offsetHeight;
+
+            // Options de html2canvas robustes ciblant le wrapper de sécurité
+            const options = {
+                scale: 3, // Résolution Ultra-HD premium (3x) pour un tracé net
+                useCORS: true,
+                allowTaint: false, // Doit être à false pour éviter de corrompre le canvas avec les images locales
+                backgroundColor: '#FFFFFF',
+                logging: false,
+                width: targetWidth,
+                height: wrapperHeight,
+                scrollX: 0,
+                scrollY: 0,
+                windowWidth: targetWidth,
+                windowHeight: wrapperHeight
+            };
+
+            // Laisser un court délai pour s'assurer que le DOM est actualisé et prêt
+            setTimeout(() => {
+                html2canvas(exportWrapper, options).then(canvas => {
+                    // Nettoyage : Supprimer le clone et restaurer le défilement et les styles
+                    document.body.removeChild(tempContainer);
+                    window.scrollTo(scrollX, scrollY);
+
+                    document.body.style.width = originalBodyWidth;
+                    document.body.style.minWidth = originalBodyMinWidth;
+                    document.body.style.overflow = originalBodyOverflow;
+                    document.documentElement.style.width = originalHtmlWidth;
+                    document.documentElement.style.minWidth = originalHtmlMinWidth;
+                    document.documentElement.style.overflow = originalHtmlOverflow;
+
+                    try {
+                        const link = document.createElement('a');
+                        link.download = 'dashboard_demographie_but_sd_2016_2022.png';
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                    } catch (err) {
+                        console.error("Erreur de téléchargement d'image:", err);
+                        try {
+                            const imgUrl = canvas.toDataURL('image/png');
+                            const newTab = window.open();
+                            if (newTab) {
+                                newTab.document.write('<iframe src="' + imgUrl + '" frameborder="0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
+                            } else {
+                                alert("Veuillez autoriser les fenêtres contextuelles (popups) ou enregistrer en PDF.");
+                            }
+                        } catch (fallbackErr) {
+                            alert("Un problème de restriction locale empêche le téléchargement. Veuillez utiliser 'Exporter en PDF'.");
+                        }
+                    }
+                }).catch(err => {
+                    if (document.body.contains(tempContainer)) {
+                        document.body.removeChild(tempContainer);
+                    }
+                    window.scrollTo(scrollX, scrollY);
+
+                    document.body.style.width = originalBodyWidth;
+                    document.body.style.minWidth = originalBodyMinWidth;
+                    document.body.style.overflow = originalBodyOverflow;
+                    document.documentElement.style.width = originalHtmlWidth;
+                    document.documentElement.style.minWidth = originalHtmlMinWidth;
+                    document.documentElement.style.overflow = originalHtmlOverflow;
+
+                    console.error("Erreur html2canvas:", err);
+                    alert("Erreur lors de la capture d'image.");
+                });
+            }, 200);
+        }
+    </script>
+
 </body>
+
 </html>

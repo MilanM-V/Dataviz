@@ -38,6 +38,30 @@ def build():
 
 
     with open("rendu_final.html","w",encoding="utf-8") as f:
+        # Encoder automatiquement toutes les images du dossier 'img' en base64 pour éviter 
+        # les bugs de sécurité locale (tainted canvas) lors de l'ouverture sous le protocole file://
+        import base64
+        import os
+        import re
+        
+        # Trouver toutes les images définies avec des guillemets doubles ou simples de manière robuste
+        matches_double = re.findall(r'src="([^"]+)"', page)
+        matches_single = re.findall(r"src='([^']+)'", page)
+        matches = [m for m in (matches_double + matches_single) if m.startswith('img/')]
+        
+        for img_path in set(matches):
+            if os.path.exists(img_path):
+                ext = os.path.splitext(img_path)[1].lower().replace('.', '')
+                mime = "image/png" if ext == "png" else "image/jpeg"
+                with open(img_path, "rb") as img_f:
+                    encoded = base64.b64encode(img_f.read()).decode('utf-8')
+                base64_data = f"data:{mime};base64,{encoded}"
+                page = page.replace(f'src="{img_path}"', f'src="{base64_data}"')
+                page = page.replace(f"src='{img_path}'", f"src='{base64_data}'")
+                print(f"Image en ligne : {img_path} convertie avec succès !")
+            else:
+                print(f"Attention : Image introuvable : {img_path}")
+
         f.write(page)
 
 
