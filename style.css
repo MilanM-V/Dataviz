@@ -1,155 +1,35 @@
-/* ============================================
-   PALETTE DE COULEURS
-   ============================================
-   
-   Pour changer le thème, modifiez uniquement
-   les couleurs ci-dessous. Tout le template
-   s'adaptera automatiquement.
-
-   ============================================ */
-
 :root {
-    /* ----- COULEUR PRINCIPALE — ROSE PASTEL ----- */
-    --primary: #d4637a;            /* Rose principal */
-    --primary-light: #e8889b;      /* Rose clair (hover, accents) */
-    --primary-dark: #b84a60;       /* Rose foncé (header) */
-    --primary-bg: #fce4ec;         /* Fond rose très léger (stats) */
-    --primary-bg-light: #fdf2f4;   /* Fond rose ultra léger (KPI) */
+    /* ----- COULEURS PRINCIPALES ----- */
+    --primary: #1F2147;            /* Bleu nuit premium */
+    --primary-light: #4A5AA8;      /* Bleu lavande */
+    --primary-dark: #12132D;       /* Bleu sombre */
+    --primary-bg: #F8F9FA;         /* Fond clair */
+    --primary-bg-light: #FFFFFF;   /* Blanc */
 
     /* ----- COULEUR SECONDAIRE ----- */
-    --accent: #7c8bbf;             /* Bleu lavande accent */
-    --accent-light: #e8ecf7;       /* Bleu lavande clair */
+    --accent: #E5A93B;             /* Jaune doré / Ambre */
+    --accent-light: #FFF8EB;
 
     /* ----- FONDS ----- */
-    --bg: #faf6f7;                 /* Fond de page rosé */
-    --bg-white: #ffffff;           /* Fond des cartes */
+    --bg: #FFFFFF;                 /* Fond de page Blanc */
+    --bg-white: #FFFFFF;           /* Fond de conteneur Blanc */
 
     /* ----- TEXTES ----- */
-    --text-dark: #2d2235;          /* Titres */
-    --text-body: #3d3347;          /* Texte courant */
-    --text-muted: #7a7087;         /* Texte secondaire */
-    --text-light: #a89db3;         /* Texte discret */
+    --text-dark: #1F2147;          /* Titres sombres */
+    --text-body: #333333;          /* Texte de corps */
+    --text-muted: #555555;         /* Texte secondaire */
+    --text-light: #777777;         /* Texte discret */
 
     /* ----- BORDURES ----- */
-    --border: #ecdfe3;             /* Bordure des blocs */
-    --border-light: #f5ecef;       /* Bordure légère */
+    --border: transparent;         /* Aucune bordure */
+    --border-light: transparent;
 
     /* ----- OMBRES ----- */
-    --shadow: 0 2px 10px rgba(180, 140, 160, 0.08);
-    --shadow-md: 0 4px 16px rgba(180, 140, 160, 0.12);
+    --shadow: none;                /* Pas d'ombres */
+    --shadow-md: none;
 
     /* ----- ARRONDIS ----- */
     --radius: 14px;
     --radius-sm: 10px;
 }
 
-
-/* ============================================
-   EXEMPLES DE THÈMES PRÊTS À L'EMPLOI
-   ============================================
-   
-   Pour utiliser un thème, décommentez le bloc
-   correspondant et commentez le bloc par défaut
-   ci-dessus.
-
-   ============================================ */
-
-
-/* ----- THÈME BLEU OCÉAN -----
-:root {
-    --primary: #1a73a7;
-    --primary-light: #3b9dd4;
-    --primary-dark: #0f5a85;
-    --primary-bg: #dbeef9;
-    --primary-bg-light: #edf6fc;
-    --accent: #e67e22;
-    --accent-light: #fde8d0;
-    --bg: #f0f4f8;
-    --bg-white: #ffffff;
-    --text-dark: #1a1a2e;
-    --text-body: #333333;
-    --text-muted: #6b7280;
-    --text-light: #9ca3af;
-    --border: #d6dfe8;
-    --border-light: #e8eef4;
-    --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --radius: 12px;
-    --radius-sm: 8px;
-}
-*/
-
-
-/* ----- THÈME VIOLET -----
-:root {
-    --primary: #7c3aed;
-    --primary-light: #a78bfa;
-    --primary-dark: #5b21b6;
-    --primary-bg: #ede9fe;
-    --primary-bg-light: #f5f3ff;
-    --accent: #ec4899;
-    --accent-light: #fce7f3;
-    --bg: #f5f3ff;
-    --bg-white: #ffffff;
-    --text-dark: #1e1b4b;
-    --text-body: #333333;
-    --text-muted: #6b7280;
-    --text-light: #9ca3af;
-    --border: #ddd6fe;
-    --border-light: #ede9fe;
-    --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --radius: 12px;
-    --radius-sm: 8px;
-}
-*/
-
-
-/* ----- THÈME ROUGE / CORAIL -----
-:root {
-    --primary: #dc2626;
-    --primary-light: #f87171;
-    --primary-dark: #991b1b;
-    --primary-bg: #fee2e2;
-    --primary-bg-light: #fef2f2;
-    --accent: #0ea5e9;
-    --accent-light: #e0f2fe;
-    --bg: #fafaf9;
-    --bg-white: #ffffff;
-    --text-dark: #1a1a2e;
-    --text-body: #333333;
-    --text-muted: #6b7280;
-    --text-light: #9ca3af;
-    --border: #e7e5e4;
-    --border-light: #f0efed;
-    --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --radius: 12px;
-    --radius-sm: 8px;
-}
-*/
-
-
-/* ----- THÈME DARK MODE -----
-:root {
-    --primary: #6366f1;
-    --primary-light: #818cf8;
-    --primary-dark: #4f46e5;
-    --primary-bg: rgba(99, 102, 241, 0.15);
-    --primary-bg-light: rgba(99, 102, 241, 0.08);
-    --accent: #f59e0b;
-    --accent-light: rgba(245, 158, 11, 0.15);
-    --bg: #0f172a;
-    --bg-white: #1e293b;
-    --text-dark: #f1f5f9;
-    --text-body: #e2e8f0;
-    --text-muted: #94a3b8;
-    --text-light: #64748b;
-    --border: #334155;
-    --border-light: #1e293b;
-    --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-    --radius: 12px;
-    --radius-sm: 8px;
-}
-*/
